@@ -1,11 +1,15 @@
 import "./App.css";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useEffect, useState } from "react";
 
 // MATERIAL UI COMPONENT
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 import Button from "@mui/material/Button";
+
+// External Libraries
+import axios from "axios";
 
 const theme = createTheme({
   typography: {
@@ -14,6 +18,23 @@ const theme = createTheme({
 });
 
 function App() {
+  const [temp, setTemp] = useState(null);
+  useEffect(() => {
+    axios
+      .get(
+        "https://api.openweathermap.org/data/2.5/weather?lat=23.61&lon=58.54&appid=286fe928123ae956ba5171a821823268"
+      )
+      .then(function (response) {
+        // handle success
+        const responseTemp = response.data.main.temp - 272.15;
+        setTemp(responseTemp.toFixed(1));
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+  }, []);
+
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
@@ -74,7 +95,7 @@ function App() {
                     {/* Temp */}
                     <div>
                       <Typography variant="h1" style={{ textAlign: "right" }}>
-                        38
+                        {temp}
                       </Typography>
 
                       {/* TODO: Temp Image */}
