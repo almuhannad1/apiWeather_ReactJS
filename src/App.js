@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import "./App.css";
 import { useEffect, useState } from "react";
 
@@ -17,22 +18,48 @@ const theme = createTheme({
   },
 });
 
+let cancelAxios = null;
+
 function App() {
-  const [temp, setTemp] = useState(null);
+  const [temp, setTemp] = useState({
+    number: null,
+    description: "",
+    min: null,
+    max: null,
+    icone: null,
+  });
   useEffect(() => {
     axios
       .get(
-        "https://api.openweathermap.org/data/2.5/weather?lat=23.61&lon=58.54&appid=286fe928123ae956ba5171a821823268"
+        "https://api.openweathermap.org/data/2.5/weather?lat=23.61&lon=58.54&appid=286fe928123ae956ba5171a821823268",
+        {
+          cancelToken: new axios.CancelToken((c) => {
+            cancelAxios = c;
+          }),
+        }
       )
       .then(function (response) {
         // handle success
-        const responseTemp = response.data.main.temp - 272.15;
-        setTemp(responseTemp.toFixed(1));
+        const responseTemp = Math.round(response.data.main.temp - 272.15);
+        const responseMax = Math.round(response.data.main.temp_max - 272.15);
+        const responseMin = Math.round(response.data.main.temp_min - 272.15);
+        const description = response.data.weather[0].description;
+        const responseIcon = response.data.weather[0].icon;
+        setTemp({
+          number: responseTemp,
+          description: description,
+          min: responseMin,
+          max: responseMax,
+          icon: `https://openweathermap.org/img/wn/${responseIcon}@2x.png`,
+        });
       })
       .catch(function (error) {
         // handle error
         console.log(error);
       });
+    return () => {
+      cancelAxios();
+    };
   }, []);
 
   return (
@@ -93,29 +120,37 @@ function App() {
                   {/* Degree & Description */}
                   <div>
                     {/* Temp */}
-                    <div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
                       <Typography variant="h1" style={{ textAlign: "right" }}>
-                        {temp}
+                        {temp.number}
                       </Typography>
 
-                      {/* TODO: Temp Image */}
-
-                      <Typography variant="h6">broken clouds</Typography>
-
-                      {/* Min &  Max */}
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-around",
-                          alignItems: "center",
-                        }}
-                      >
-                        <h5>الصغرى: 34</h5>
-                        <h5 style={{ margin: "0px 5px" }}> | </h5>
-                        <h5>الكبرى: 40</h5>
-                      </div>
-                      {/* === Min &  Max === */}
+                      <img
+                        src={"https://openweathermap.org/img/wn/10d@2x.png"}
+                      />
                     </div>
+                    <Typography variant="h6">{temp.description}</Typography>
+
+                    {/* Min &  Max */}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                        alignItems: "center",
+                      }}
+                    >
+                      <h5>الصغرى: {temp.min}</h5>
+                      <h5 style={{ margin: "0px 5px" }}> | </h5>
+                      <h5>الكبرى: {temp.max}</h5>
+                    </div>
+                    {/* === Min &  Max === */}
+
                     {/* === Temp === */}
                   </div>
                   {/* === Degree & Description === */}
