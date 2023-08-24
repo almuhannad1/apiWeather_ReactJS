@@ -1,3 +1,15 @@
 {
-    "Muscat": "مسقط"
+    "Muscat": "مسقط",
+    "Min": "الصغرى",
+    "Max": "الكبرى",
+    "clear sky": "سماء صافية",
+    "few clouds":"قليل الغيوم",
+    "scattered clouds":"غيوم متفرقة",
+    "broken clouds":"غيوم متقطعة",
+    "shower rain":"مطر متقطع",
+    "moderate rain": "أمطار معتدلة",
+    "rain":"مطر",
+    "thunderstorm":"عاصفة رعدية",
+    "snow":"ثلج",
+    "mist":"ضباب"
 }

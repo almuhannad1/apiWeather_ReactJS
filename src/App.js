@@ -14,7 +14,7 @@ import axios from "axios";
 import moment from "moment/moment";
 import "moment/min/locales";
 import { useTranslation } from "react-i18next";
-moment.locale("ar");
+
 
 const theme = createTheme({
   typography: {
@@ -27,6 +27,7 @@ let cancelAxios = null;
 function App() {
   const { t, i18n } = useTranslation();
 
+  // States
   const [dateAndTime, setDateAndTime] = useState("");
   const [temp, setTemp] = useState({
     number: null,
@@ -35,10 +36,28 @@ function App() {
     max: null,
     icone: null,
   });
+  const [locale, setLocale] = useState("en");
+  // === States ===
+
+  //Event handlers
+  function handleLanguageClick() {
+    if (locale === "en") {
+      setLocale("ar");
+      i18n.changeLanguage("ar");
+      moment.locale("ar");
+    } else {
+      setLocale("en");
+      i18n.changeLanguage("en");
+      moment.locale("en");
+    }
+    setDateAndTime(moment().format("Do MMMM YYYY"));
+  }
+  // === Event handlers ===
 
   // To translate a page.
   useEffect(() => {
-    i18n.changeLanguage("ar");
+    i18n.changeLanguage(locale);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -150,7 +169,7 @@ function App() {
                         src={"https://openweathermap.org/img/wn/10d@2x.png"}
                       />
                     </div>
-                    <Typography variant="h6">{temp.description}</Typography>
+                    <Typography variant="h6">{t(temp.description)}</Typography>
 
                     {/* Min &  Max */}
                     <div
@@ -160,9 +179,13 @@ function App() {
                         alignItems: "center",
                       }}
                     >
-                      <h5>الصغرى: {temp.min}</h5>
+                      <h5>
+                        {t("Min")}: {temp.min}
+                      </h5>
                       <h5 style={{ margin: "0px 5px" }}> | </h5>
-                      <h5>الكبرى: {temp.max}</h5>
+                      <h5>
+                        {t("Max")}: {temp.max}
+                      </h5>
                     </div>
                     {/* === Min &  Max === */}
 
@@ -189,8 +212,12 @@ function App() {
                 marginTop: "10px",
               }}
             >
-              <Button style={{ color: "white" }} variant="text">
-                English
+              <Button
+                style={{ color: "white" }}
+                variant="text"
+                onClick={handleLanguageClick}
+              >
+                {locale === "en" ? "العربية" : "English"}
               </Button>
             </div>
             {/* === Translation Container === */}
