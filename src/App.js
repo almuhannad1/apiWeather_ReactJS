@@ -12,8 +12,9 @@ import Button from "@mui/material/Button";
 // External Libraries
 import axios from "axios";
 import moment from "moment/moment";
-import "moment/min/locales"
-moment.locale("ar");       
+import "moment/min/locales";
+import { useTranslation } from "react-i18next";
+moment.locale("ar");
 
 const theme = createTheme({
   typography: {
@@ -24,6 +25,8 @@ const theme = createTheme({
 let cancelAxios = null;
 
 function App() {
+  const { t, i18n } = useTranslation();
+
   const [dateAndTime, setDateAndTime] = useState("");
   const [temp, setTemp] = useState({
     number: null,
@@ -32,8 +35,14 @@ function App() {
     max: null,
     icone: null,
   });
+
+  // To translate a page.
   useEffect(() => {
-    setDateAndTime(moment().format('Do MMMM YYYY'))
+    i18n.changeLanguage("ar");
+  }, []);
+
+  useEffect(() => {
+    setDateAndTime(moment().format("Do MMMM YYYY"));
     axios
       .get(
         "https://api.openweathermap.org/data/2.5/weather?lat=23.61&lon=58.54&appid=286fe928123ae956ba5171a821823268",
@@ -108,7 +117,7 @@ function App() {
                     variant="h2"
                     style={{ marginRight: "20px", fontWeight: "600" }}
                   >
-                    مسقط
+                    {t("Muscat")}
                   </Typography>
 
                   <Typography variant="h5" style={{ marginRight: "20px" }}>
