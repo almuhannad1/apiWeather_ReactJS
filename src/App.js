@@ -15,7 +15,6 @@ import moment from "moment/moment";
 import "moment/min/locales";
 import { useTranslation } from "react-i18next";
 
-
 const theme = createTheme({
   typography: {
     fontFamily: "IBM",
@@ -39,6 +38,8 @@ function App() {
   const [locale, setLocale] = useState("en");
   // === States ===
 
+  const direction = locale === "ar" ? "rtl" : "ltr"
+  
   //Event handlers
   function handleLanguageClick() {
     if (locale === "en") {
@@ -101,7 +102,7 @@ function App() {
         <Container maxWidth="sm">
           {/* Content Cintainer */}
           <div
-            dir="rtl"
+            dir={direction}
             style={{
               height: "100vh",
               display: "flex",
@@ -130,7 +131,7 @@ function App() {
                     alignItems: "end",
                     justifyContent: "start",
                   }}
-                  dir="rtl"
+                  dir={direction}
                 >
                   <Typography
                     variant="h2"
